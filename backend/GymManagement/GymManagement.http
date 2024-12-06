@@ -1,0 +1,5 @@
+@GymManagement_HostAddress = http://localhost:5250
+
+Accept: application/json
+
+###
