@@ -9,13 +9,12 @@
         <a href="/classes" class="text-gray-300 hover:text-white">Classes</a>
       </div>
       <!-- Centered title -->
-      <div class="absolute left-1/2 transform -translate-x-1/2">
-        <h1 class="text-white text-lg font-semibold">
-          Gym Management Dashboard
-        </h1>
+      <div class="flex items-center space-x-4">
+        <i class="fas fa-dumbbell text-white space-x-2"></i>
+        <h1 class="text-white text-lg font-semibold">Gym Management</h1>
       </div>
       <!-- Right-aligned search form -->
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-4 ml-auto">
         <input
           type="text"
           placeholder="Search"
@@ -26,6 +25,12 @@
         >
           Search
         </button>
+        <button
+          @click="logout"
+          class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+        >
+          Logout
+        </button>
       </div>
     </div>
   </nav>
@@ -34,6 +39,12 @@
 <script>
 export default {
   name: "AppNavbar",
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 

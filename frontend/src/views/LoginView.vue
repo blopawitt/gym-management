@@ -1,37 +1,55 @@
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Login</h1>
-    <form @submit.prevent="login">
-      <div class="mb-4">
-        <label class="block text-gray-700">Username</label>
-        <input
-          v-model="username"
-          type="text"
-          class="w-full px-4 py-2 border rounded-md"
-          required
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">Password</label>
-        <input
-          v-model="password"
-          type="password"
-          class="w-full px-4 py-2 border rounded-md"
-          required
-        />
-      </div>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
-        Login
-      </button>
-    </form>
+  <div class="min-h-screen flex items-start justify-center bg-gray-100 pt-16">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md mr-24">
+      <form @submit.prevent="login">
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="username"
+          >
+            Username
+          </label>
+          <input
+            v-model="username"
+            type="text"
+            id="username"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="password"
+          >
+            Password
+          </label>
+          <input
+            v-model="password"
+            type="password"
+            id="password"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            required
+          />
+        </div>
+        <div class="flex items-center justify-center">
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Sign In
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import axios from "../axios-instance"; // Import the configured Axios instance
+<script>
+import { ref } from "vue";
+import axios from "axios";
 
-export default defineComponent({
+export default {
   name: "LoginView",
   setup() {
     const username = ref("");
@@ -39,14 +57,14 @@ export default defineComponent({
 
     const login = async () => {
       try {
-        const response = await axios.post("/auth/login", {
+        const response = await axios.post("/api/auth/login", {
           username: username.value,
           password: password.value,
         });
         localStorage.setItem("token", response.data.token);
-        // Redirect to the classes page or another protected page
+        this.$router.push("/");
       } catch (error) {
-        console.error("Error logging in:", error);
+        console.error("Login failed:", error);
       }
     };
 
@@ -56,9 +74,9 @@ export default defineComponent({
       login,
     };
   },
-});
+};
 </script>
 
 <style scoped>
-/* Add any component-specific styles here */
+/* Adicione qualquer estilo específico do componente aqui */
 </style>

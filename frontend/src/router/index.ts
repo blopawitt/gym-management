@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ClassesView from "../views/ClassesView.vue";
 import LoginView from "../views/LoginView.vue";
+import MembersView from "@/views/MembersView.vue";
+import TrainersView from "@/views/TrainersView.vue";
 
 const routes = [
   {
@@ -11,9 +13,21 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/trainers",
+    name: "trainers",
+    component: TrainersView,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/classes",
     name: "classes",
     component: ClassesView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/members",
+    name: "members",
+    component: MembersView,
     meta: { requiresAuth: true },
   },
   {
