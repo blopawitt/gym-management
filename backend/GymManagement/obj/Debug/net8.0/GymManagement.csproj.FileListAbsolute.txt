@@ -133,3 +133,13 @@ C:\Users\tablito\gymmanagement\backend\GymManagement\obj\Debug\net8.0\refint\Gym
 C:\Users\tablito\gymmanagement\backend\GymManagement\obj\Debug\net8.0\GymManagement.pdb
 C:\Users\tablito\gymmanagement\backend\GymManagement\obj\Debug\net8.0\GymManagement.genruntimeconfig.cache
 C:\Users\tablito\gymmanagement\backend\GymManagement\obj\Debug\net8.0\ref\GymManagement.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\obj\Debug\net8.0\GymManagement.sourcelink.json
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\tablito\gymmanagement\backend\GymManagement\bin\Debug\net8.0\BCrypt.Net-Next.dll

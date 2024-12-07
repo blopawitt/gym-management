@@ -8,12 +8,14 @@ namespace GymManagement.Data
         public required DbSet<Member> Members { get; set; }
         public required DbSet<Trainer> Trainers { get; set; }
         public required DbSet<Class> Classes { get; set; }
+        public required DbSet<User> Users { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Members = Set<Member>();
             Trainers = Set<Trainer>();
             Classes = Set<Class>();
+            Users = Set<User>();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

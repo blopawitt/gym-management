@@ -38,6 +38,7 @@ namespace GymManagement.Controllers
         [HttpPost]
         public async Task<ActionResult<Trainer>> PostTrainer(Trainer trainer)
         {
+            trainer.JoiningDate = trainer.JoiningDate.ToUniversalTime();
             _context.Trainers.Add(trainer);
             await _context.SaveChangesAsync();
 
