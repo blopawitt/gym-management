@@ -47,13 +47,17 @@
 
 <script>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
+
+axios.defaults.baseURL = "https://localhost:7032";
 
 export default {
   name: "LoginView",
   setup() {
     const username = ref("");
     const password = ref("");
+    const router = useRouter();
 
     const login = async () => {
       try {
@@ -62,7 +66,7 @@ export default {
           password: password.value,
         });
         localStorage.setItem("token", response.data.token);
-        this.$router.push("/");
+        router.push("/");
       } catch (error) {
         console.error("Login failed:", error);
       }

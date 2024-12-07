@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Classes</h1>
+  <div class="container mx-auto">
+    <h1 class="text-2xl font-bold mt-2">Classes</h1>
     <div class="mb-4">
       <button
         @click="openModal"
