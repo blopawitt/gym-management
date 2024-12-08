@@ -4,6 +4,7 @@ import ClassesView from "../views/ClassesView.vue";
 import LoginView from "../views/LoginView.vue";
 import MembersView from "@/views/MembersView.vue";
 import TrainersView from "@/views/TrainersView.vue";
+import SubscriptionsView from "@/views/SubscriptionsView.vue";
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: LoginView,
+  },
+  {
+    path: "/subscriptions",
+    name: "subscriptions",
+    component: SubscriptionsView,
   },
 ];
 

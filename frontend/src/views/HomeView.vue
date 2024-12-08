@@ -4,6 +4,18 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import axios from "../axios-instance"; // Import the configured Axios instance
 
+interface Expense {
+  description: string;
+  amount: number;
+  date: string;
+}
+
+interface Income {
+  description: string;
+  amount: number;
+  date: string;
+}
+
 export default defineComponent({
   name: "HomeView",
   components: {
@@ -25,12 +37,24 @@ export default defineComponent({
         endTime: "",
         trainerId: 0,
       },
+      newExpense: {
+        description: "",
+        amount: 0,
+        date: "",
+      },
+      newIncome: {
+        description: "",
+        amount: 0,
+        date: "",
+      },
       calendarOptions: {
         plugins: [dayGridPlugin],
         initialView: "dayGridMonth",
         weekends: true,
         events: [],
       },
+      additionalExpenses: [] as Expense[],
+      additionalIncomes: [] as Income[],
     };
   },
   methods: {
@@ -43,6 +67,25 @@ export default defineComponent({
         "Fetching income and outcome for date range:",
         this.dateRange
       );
+      this.fetchTrainerSalaries();
+    },
+    fetchTrainerSalaries() {
+      axios
+        .get("/trainers")
+        .then((response) => {
+          const totalSalary = response.data.reduce(
+            (sum: number, trainer: { salary: number }) => sum + trainer.salary,
+            0
+          );
+          const totalExpenses = this.additionalExpenses.reduce(
+            (sum, expense) => sum + expense.amount,
+            0
+          );
+          this.outcome = totalSalary + totalExpenses; // Sum annual salaries and additional expenses
+        })
+        .catch((error) => {
+          console.error("Error fetching trainer salaries:", error);
+        });
     },
     fetchClasses() {
       axios
@@ -67,6 +110,20 @@ export default defineComponent({
     },
     addClass() {
       // Placeholder for adding a new class logic
+    },
+    addExpense() {
+      this.additionalExpenses.push({ ...this.newExpense });
+      this.newExpense.description = "";
+      this.newExpense.amount = 0;
+      this.newExpense.date = "";
+      this.fetchIncomeOutcome(); // Recalculate outcome after adding an expense
+    },
+    addIncome() {
+      this.additionalIncomes.push({ ...this.newIncome });
+      this.newIncome.description = "";
+      this.newIncome.amount = 0;
+      this.newIncome.date = "";
+      this.fetchIncomeOutcome(); // Recalculate income after adding an income
     },
   },
   watch: {
@@ -104,9 +161,109 @@ export default defineComponent({
           class="w-full px-4 py-2 border rounded-md"
         />
       </div>
+      <div class="flex">
+        <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1">
+          <h2 class="text-xl font-bold mb-2">Balance</h2>
+          <p>{{ income - outcome }}</p>
+        </div>
+        <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1 ml-4">
+          <h2 class="text-xl font-bold mb-2">Total Income</h2>
+          <p>{{ income }}</p>
+        </div>
+        <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1 ml-4">
+          <h2 class="text-xl font-bold mb-2">Total Outcome</h2>
+          <p>{{ outcome }}</p>
+        </div>
+      </div>
       <div class="card bg-white shadow-md rounded-md p-4 mb-4">
-        <h2 class="text-xl font-bold mb-2">Balance</h2>
-        <p>{{ income - outcome }}</p>
+        <h2 class="text-xl font-bold mb-2">Additional Expenses</h2>
+        <form @submit.prevent="addExpense">
+          <div class="mb-4">
+            <label class="block text-gray-700">Description</label>
+            <input
+              v-model="newExpense.description"
+              type="text"
+              class="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Amount</label>
+            <input
+              v-model="newExpense.amount"
+              type="number"
+              class="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Date</label>
+            <input
+              v-model="newExpense.date"
+              type="date"
+              class="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Add Expense
+            </button>
+          </div>
+        </form>
+        <ul>
+          <li v-for="expense in additionalExpenses" :key="expense.description">
+            {{ expense.description }}: {{ expense.amount }} ({{ expense.date }})
+          </li>
+        </ul>
+      </div>
+      <div class="card bg-white shadow-md rounded-md p-4 mb-4">
+        <h2 class="text-xl font-bold mb-2">Additional Incomes</h2>
+        <form @submit.prevent="addIncome">
+          <div class="mb-4">
+            <label class="block text-gray-700">Description</label>
+            <input
+              v-model="newIncome.description"
+              type="text"
+              class="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Amount</label>
+            <input
+              v-model="newIncome.amount"
+              type="number"
+              class="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Date</label>
+            <input
+              v-model="newIncome.date"
+              type="date"
+              class="w-full px-4 py-2 border rounded-md"
+              required
+            />
+          </div>
+          <div class="flex justify-end">
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Add Income
+            </button>
+          </div>
+        </form>
+        <ul>
+          <li v-for="income in additionalIncomes" :key="income.description">
+            {{ income.description }}: {{ income.amount }} ({{ income.date }})
+          </li>
+        </ul>
       </div>
     </div>
     <div class="sidebar flex-1 p-4">

@@ -9,6 +9,9 @@
           >Trainers</a
         >
         <a href="/classes" class="text-gray-600 hover:text-gray-800">Classes</a>
+        <a href="/subscriptions" class="text-gray-600 hover:text-gray-800"
+          >Subscriptions</a
+        >
       </div>
       <!-- Centered title -->
       <div class="flex items-center space-x-4">
