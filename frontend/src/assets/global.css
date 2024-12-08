@@ -18,6 +18,13 @@ h6 {
 button {
   font-family: "Roboto", sans-serif;
   font-weight: 700;
+  background-color: #e0e7ff; /* Light Blue */
+  color: #1e3a8a; /* Dark Blue */
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #c7d2fe; /* Slightly Darker Light Blue */
 }
 
 .container {
@@ -27,17 +34,17 @@ button {
 }
 
 .bg-primary {
-  background-color: #1e3a8a; /* Azul Escuro */
+  background-color: #1e3a8a; /* Dark Blue */
 }
 
 .bg-secondary {
-  background-color: #f43f5e; /* Vermelho Vibrante */
+  background-color: #f43f5e; /* Vibrant Red */
 }
 
 .text-primary {
-  color: #1e3a8a; /* Azul Escuro */
+  color: #1e3a8a; /* Dark Blue */
 }
 
 .text-secondary {
-  color: #f43f5e; /* Vermelho Vibrante */
+  color: #f43f5e; /* Vibrant Red */
 }

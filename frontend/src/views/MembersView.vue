@@ -1,9 +1,9 @@
 <template>
-  <div class="container mx-auto">
-    <div class="mb-4 mt-2">
+  <div class="w-full mx-auto">
+    <div class="mb-4 mt-2 ml-2">
       <button
         @click="openModal"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
       >
         Add Member
       </button>
@@ -39,7 +39,7 @@
           <td class="py-2 px-4 border-b text-left">
             <button
               @click="removeMember(member.id)"
-              class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+              class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400"
             >
               Remove
             </button>
@@ -127,13 +127,13 @@
             <button
               type="button"
               @click="closeModal"
-              class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2"
+              class="bg-gray-300 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+              class="bg-blue-300 text-white px-4 py-2 rounded-md hover:bg-blue-400"
             >
               Add Member
             </button>

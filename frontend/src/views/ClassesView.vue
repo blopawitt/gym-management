@@ -1,14 +1,14 @@
 <template>
-  <div class="container mx-auto">
-    <div class="mb-4 mt-2">
+  <div class="w-full mx-auto">
+    <div class="mb-4 mt-2 ml-2">
       <button
         @click="openModal"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 mb-4"
       >
         Add Class
       </button>
     </div>
-    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ml-2">
       <li
         v-for="classItem in classes"
         :key="classItem.id"
@@ -32,7 +32,7 @@
         </div>
         <button
           @click="removeClass(classItem.id)"
-          class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4 self-end"
+          class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 mt-4 self-end"
         >
           Remove
         </button>
@@ -44,7 +44,7 @@
       v-if="isModalOpen"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
-      <div class="bg-white p-6 rounded-md">
+      <div class="bg-white p-6 rounded-md w-3/4">
         <h2 class="text-xl font-bold mb-4">Add New Class</h2>
         <form @submit.prevent="submitForm">
           <div class="mb-4">
@@ -96,13 +96,13 @@
             <button
               type="button"
               @click="closeModal"
-              class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2"
+              class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400"
             >
               Add Class
             </button>

@@ -44,5 +44,30 @@ namespace GymManagement.Controllers
 
             return Ok(existingPrices);
         }
+
+        [HttpGet("latest")]
+        public async Task<IActionResult> GetLatestPrice()
+        {
+            try
+            {
+                var latestPrice = await _context.Prices
+                    .OrderByDescending(p => p.Id)
+                    .FirstOrDefaultAsync();
+
+                if (latestPrice == null)
+                {
+                    Console.WriteLine("No prices found in the database.");
+                    return NotFound();
+                }
+
+                Console.WriteLine($"Latest price found: {latestPrice.Id}");
+                return Ok(latestPrice);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching latest price: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

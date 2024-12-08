@@ -112,18 +112,38 @@ export default defineComponent({
       // Placeholder for adding a new class logic
     },
     addExpense() {
-      this.additionalExpenses.push({ ...this.newExpense });
-      this.newExpense.description = "";
-      this.newExpense.amount = 0;
-      this.newExpense.date = "";
-      this.fetchIncomeOutcome(); // Recalculate outcome after adding an expense
+      // Ensure the date is in the correct format
+      this.newExpense.date = new Date(this.newExpense.date).toISOString();
+
+      axios
+        .post("/expenses", this.newExpense)
+        .then((response) => {
+          this.additionalExpenses.push(response.data);
+          this.newExpense.description = "";
+          this.newExpense.amount = 0;
+          this.newExpense.date = "";
+          this.fetchIncomeOutcome(); // Recalculate outcome after adding an expense
+        })
+        .catch((error) => {
+          console.error("Error adding expense:", error);
+        });
     },
     addIncome() {
-      this.additionalIncomes.push({ ...this.newIncome });
-      this.newIncome.description = "";
-      this.newIncome.amount = 0;
-      this.newIncome.date = "";
-      this.fetchIncomeOutcome(); // Recalculate income after adding an income
+      // Ensure the date is in the correct format
+      this.newIncome.date = new Date(this.newIncome.date).toISOString();
+
+      axios
+        .post("/incomes", this.newIncome)
+        .then((response) => {
+          this.additionalIncomes.push(response.data);
+          this.newIncome.description = "";
+          this.newIncome.amount = 0;
+          this.newIncome.date = "";
+          this.fetchIncomeOutcome(); // Recalculate income after adding an income
+        })
+        .catch((error) => {
+          console.error("Error adding income:", error);
+        });
     },
   },
   watch: {
@@ -208,7 +228,7 @@ export default defineComponent({
           <div class="flex justify-end">
             <button
               type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400"
             >
               Add Expense
             </button>
@@ -253,7 +273,7 @@ export default defineComponent({
           <div class="flex justify-end">
             <button
               type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400"
             >
               Add Income
             </button>
@@ -319,7 +339,7 @@ export default defineComponent({
           <div class="flex justify-end">
             <button
               type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400"
             >
               Add Class
             </button>

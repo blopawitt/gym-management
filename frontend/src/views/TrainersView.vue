@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto">
-    <div class="mt-2">
+  <div class="w-full mx-auto">
+    <div class="mb-4 mt-2 ml-2">
       <button
         @click="openModal"
         class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"

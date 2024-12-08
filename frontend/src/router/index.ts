@@ -40,6 +40,7 @@ const routes = [
     path: "/subscriptions",
     name: "subscriptions",
     component: SubscriptionsView,
+    meta: { requiresAuth: true },
   },
 ];
 

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using GymManagement.Models;
 using GymManagement.Data;
@@ -27,6 +26,18 @@ namespace GymManagement.Controllers
         [HttpPost]
         public ActionResult<Income> PostIncome(Income income)
         {
+            if (!ModelState.IsValid)
+            {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+                return BadRequest(ModelState);
+            }
+
+            // Convert DateTime values to UTC
+            income.Date = income.Date.ToUniversalTime();
+
             _context.Incomes.Add(income);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetIncomes), new { id = income.Id }, income);
