@@ -1,15 +1,17 @@
 <template>
   <div class="container mx-auto">
-    <h1 class="text-2xl font-bold mt-2">Trainers</h1>
-    <button
-      @click="openModal"
-      class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
-    >
-      Add Trainer
-    </button>
+    <div class="mb-4 mt-2">
+      <button
+        @click="openModal"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+      >
+        Add Trainer
+      </button>
+    </div>
     <table class="min-w-full bg-white">
       <thead>
         <tr>
+          <th class="py-2 px-4 border-b text-left">ID</th>
           <th class="py-2 px-4 border-b text-left">Name</th>
           <th class="py-2 px-4 border-b text-left">Email</th>
           <th class="py-2 px-4 border-b text-left">Phone</th>
@@ -21,6 +23,7 @@
       </thead>
       <tbody>
         <tr v-for="trainer in trainers" :key="trainer.id">
+          <td class="py-2 px-4 border-b text-left">{{ trainer.id }}</td>
           <td class="py-2 px-4 border-b text-left">{{ trainer.name }}</td>
           <td class="py-2 px-4 border-b text-left">{{ trainer.email }}</td>
           <td class="py-2 px-4 border-b text-left">{{ trainer.phone }}</td>
@@ -30,18 +33,20 @@
           </td>
           <td class="py-2 px-4 border-b">{{ trainer.salary }}</td>
           <td class="py-2 px-4 border-b">
-            <button
-              @click="editTrainer(trainer)"
-              class="bg-yellow-500 text-white px-4 py-2 rounded-md mr-2"
-            >
-              Edit
-            </button>
-            <button
-              @click="deleteTrainer(trainer.id)"
-              class="bg-red-500 text-white px-4 py-2 rounded-md"
-            >
-              Delete
-            </button>
+            <div class="flex space-x-2">
+              <button
+                @click="editTrainer(trainer)"
+                class="flex-1 bg-yellow-500 text-white px-4 py-2 rounded-md"
+              >
+                Edit
+              </button>
+              <button
+                @click="deleteTrainer(trainer.id)"
+                class="flex-1 bg-red-500 text-white px-4 py-2 rounded-md"
+              >
+                Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -51,7 +56,7 @@
       v-if="isModalOpen"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
-      <div class="bg-white p-4 rounded-md">
+      <div class="bg-white p-6 rounded-md w-3/4">
         <h2 class="text-xl font-bold mb-4">
           {{ isEditing ? "Edit Trainer" : "Add Trainer" }}
         </h2>

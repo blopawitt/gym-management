@@ -1,7 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <h1 class="text-2xl font-bold mt-2">Classes</h1>
-    <div class="mb-4">
+    <div class="mb-4 mt-2">
       <button
         @click="openModal"
         class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
@@ -26,6 +25,9 @@
           </p>
           <p class="text-gray-500 mb-1">
             Trainer ID: {{ classItem.trainerId }}
+          </p>
+          <p class="text-gray-500 mb-1">
+            Trainer: {{ classItem.trainer ? classItem.trainer.name : "N/A" }}
           </p>
         </div>
         <button
@@ -143,16 +145,32 @@ export default defineComponent({
     const fetchClasses = async () => {
       try {
         const response = await axios.get("/classes");
-        classes.value = response.data;
+        const classItems = response.data;
+        for (const classItem of classItems) {
+          classItem.trainer = await fetchTrainer(classItem.trainerId);
+        }
+        classes.value = classItems;
       } catch (error) {
         console.error("Error fetching classes:", error);
+      }
+    };
+
+    const fetchTrainer = async (trainerId: number) => {
+      try {
+        const response = await axios.get(`/trainers/${trainerId}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching trainer:", error);
+        return null;
       }
     };
 
     const addClass = async () => {
       try {
         const response = await axios.post("/classes", newClass.value);
-        classes.value.push(response.data);
+        const addedClass = response.data;
+        addedClass.trainer = await fetchTrainer(addedClass.trainerId);
+        classes.value.push(addedClass);
         closeModal();
       } catch (error) {
         console.error("Error adding class:", error);
@@ -193,6 +211,7 @@ export default defineComponent({
       submitForm,
       addClass,
       removeClass,
+      fetchTrainer,
     };
   },
 });
