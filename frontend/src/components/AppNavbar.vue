@@ -12,6 +12,7 @@
         <a href="/subscriptions" class="text-gray-600 hover:text-gray-800"
           >Subscriptions</a
         >
+        <a href="/money" class="text-gray-600 hover:text-gray-800">$</a>
       </div>
       <!-- Centered title -->
       <div

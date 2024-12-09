@@ -3,6 +3,8 @@ using GymManagement.Models;
 using GymManagement.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymManagement.Controllers
 {
@@ -41,6 +43,35 @@ namespace GymManagement.Controllers
             _context.Expenses.Add(expense);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetExpenses), new { id = expense.Id }, expense);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutExpense(int id, Expense expense)
+        {
+            if (id != expense.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(expense).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Expenses.Any(e => e.Id == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
     }
 }

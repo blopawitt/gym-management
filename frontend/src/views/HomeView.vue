@@ -145,6 +145,16 @@ export default defineComponent({
           console.error("Error adding income:", error);
         });
     },
+    fetchTotalIncome() {
+      axios
+        .get("/incomes/total-income")
+        .then((response) => {
+          this.income = response.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching total income:", error);
+        });
+    },
   },
   watch: {
     dateRange: {
@@ -158,6 +168,7 @@ export default defineComponent({
     this.fetchData();
     this.fetchIncomeOutcome();
     this.fetchClasses();
+    this.fetchTotalIncome(); // Fetch total income on mount
   },
 });
 </script>
@@ -184,15 +195,22 @@ export default defineComponent({
       <div class="flex">
         <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1">
           <h2 class="text-xl font-bold mb-2">Balance</h2>
-          <p>{{ income - outcome }}</p>
+          <p
+            :class="{
+              'text-red-500': income - outcome < 0,
+              'text-green-500': income - outcome > 0,
+            }"
+          >
+            $ {{ income - outcome }}
+          </p>
         </div>
         <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1 ml-4">
           <h2 class="text-xl font-bold mb-2">Total Income</h2>
-          <p>{{ income }}</p>
+          <p>$ {{ income }}</p>
         </div>
         <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1 ml-4">
           <h2 class="text-xl font-bold mb-2">Total Outcome</h2>
-          <p>{{ outcome }}</p>
+          <p>$ {{ outcome }}</p>
         </div>
       </div>
       <div class="card bg-white shadow-md rounded-md p-4 mb-4">
@@ -367,5 +385,13 @@ export default defineComponent({
   margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-red-500 {
+  color: red;
+}
+
+.text-green-500 {
+  color: green;
 }
 </style>

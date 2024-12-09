@@ -12,7 +12,7 @@
       <li
         v-for="classItem in classes"
         :key="classItem.id"
-        class="flex flex-col justify-between items-start p-4 bg-white shadow-md rounded-md"
+        class="flex flex-col justify-between items-start p-4 bg-white shadow-md rounded-md w-72"
       >
         <div>
           <h3 class="text-xl font-bold mb-2">{{ classItem.name }}</h3>

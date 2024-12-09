@@ -1,12 +1,13 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ClassesView from "../views/ClassesView.vue";
 import LoginView from "../views/LoginView.vue";
 import MembersView from "@/views/MembersView.vue";
 import TrainersView from "@/views/TrainersView.vue";
 import SubscriptionsView from "@/views/SubscriptionsView.vue";
+import MoneyView from "@/views/MoneyView.vue";
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
@@ -40,6 +41,12 @@ const routes = [
     path: "/subscriptions",
     name: "subscriptions",
     component: SubscriptionsView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/money",
+    name: "money",
+    component: MoneyView,
     meta: { requiresAuth: true },
   },
 ];
