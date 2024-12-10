@@ -7,10 +7,17 @@
       >
         Add Member
       </button>
+      <button
+        @click="openExportModal"
+        class="flex-1 bg-green-500 text-white px-4 py-2 rounded-md mb-4 ml-2"
+      >
+        Export
+      </button>
     </div>
     <table class="min-w-full bg-white">
       <thead>
         <tr>
+          <th class="py-2 px-4 border-b text-left">ID</th>
           <th class="py-2 px-4 border-b text-left">Name</th>
           <th class="py-2 px-4 border-b text-left">Email</th>
           <th class="py-2 px-4 border-b text-left">Phone</th>
@@ -23,6 +30,7 @@
       </thead>
       <tbody>
         <tr v-for="member in members" :key="member.id">
+          <td class="py-2 px-4 border-b text-left">{{ member.id }}</td>
           <td class="py-2 px-4 border-b text-left">{{ member.name }}</td>
           <td class="py-2 px-4 border-b text-left">{{ member.email }}</td>
           <td class="py-2 px-4 border-b text-left">{{ member.phone }}</td>
@@ -36,13 +44,21 @@
           <td class="py-2 px-4 border-b text-left">
             {{ member.subscriptionPlan }}
           </td>
-          <td class="py-2 px-4 border-b text-left">
-            <button
-              @click="removeMember(member.id)"
-              class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400"
-            >
-              Remove
-            </button>
+          <td class="py-2 px-4 border-b">
+            <div class="flex space-x-2">
+              <button
+                @click="editMember(member)"
+                class="flex-1 bg-yellow-500 text-white px-4 py-2 rounded-md"
+              >
+                Edit
+              </button>
+              <button
+                @click="confirmDeleteMember(member.id)"
+                class="flex-1 bg-red-500 text-white px-4 py-2 rounded-md"
+              >
+                Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -96,7 +112,7 @@
             <label class="block text-gray-700">Subscription Plan</label>
             <select
               v-model="newMember.subscriptionPlan"
-              class="w-full px-4 py-2 border rounded-md"
+              class="w-full px-4 py-2 border rounded-md bg-white"
               required
             >
               <option value="Monthly">Monthly</option>
@@ -127,18 +143,72 @@
             <button
               type="button"
               @click="closeModal"
-              class="bg-gray-300 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
+              class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="bg-blue-300 text-white px-4 py-2 rounded-md hover:bg-blue-400"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400"
             >
               Add Member
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div
+      v-if="isExportModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-md w-1/2">
+        <h2 class="text-xl font-bold mb-4">Export Users</h2>
+        <p>Do you want to export all the current users?</p>
+        <div class="flex justify-end mt-4">
+          <button
+            type="button"
+            @click="closeExportModal"
+            class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="exportUsers"
+            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-400"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div
+      v-if="isDeleteModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-md w-1/2">
+        <h2 class="text-xl font-bold mb-4">Delete Member</h2>
+        <p>Are you sure you want to delete this member?</p>
+        <div class="flex justify-end mt-4">
+          <button
+            type="button"
+            @click="closeDeleteModal"
+            class="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="deleteMember"
+            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -163,7 +233,11 @@ export default defineComponent({
     }
     const members = ref<Member[]>([]);
     const isModalOpen = ref(false);
+    const isExportModalOpen = ref(false);
+    const isDeleteModalOpen = ref(false);
+    const memberIdToDelete = ref<number | null>(null);
     const newMember = ref({
+      id: 0,
       name: "",
       email: "",
       phone: "",
@@ -205,8 +279,58 @@ export default defineComponent({
       isModalOpen.value = false;
     };
 
+    const openExportModal = () => {
+      isExportModalOpen.value = true;
+    };
+
+    const closeExportModal = () => {
+      isExportModalOpen.value = false;
+    };
+
+    const exportUsers = () => {
+      const csvContent =
+        "data:text/csv;charset=utf-8," +
+        members.value
+          .map(
+            (member) =>
+              `${member.id},${member.name},${member.email},${member.phone},${member.address},${member.subscriptionPlan},${member.membershipStartDate},${member.membershipEndDate}`
+          )
+          .join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "members.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      closeExportModal();
+    };
+
     const submitForm = () => {
       addMember();
+    };
+
+    const confirmDeleteMember = (id: number) => {
+      memberIdToDelete.value = id;
+      isDeleteModalOpen.value = true;
+    };
+
+    const closeDeleteModal = () => {
+      isDeleteModalOpen.value = false;
+      memberIdToDelete.value = null;
+    };
+
+    const deleteMember = async () => {
+      if (memberIdToDelete.value !== null) {
+        await removeMember(memberIdToDelete.value);
+        closeDeleteModal();
+      }
+    };
+
+    const editMember = (member: Member) => {
+      openModal();
+      Object.assign(newMember.value, member);
     };
 
     onMounted(fetchMembers);
@@ -214,12 +338,21 @@ export default defineComponent({
     return {
       members,
       isModalOpen,
+      isExportModalOpen,
+      isDeleteModalOpen,
       newMember,
       openModal,
       closeModal,
+      openExportModal,
+      closeExportModal,
       submitForm,
       addMember,
       removeMember,
+      exportUsers,
+      confirmDeleteMember,
+      closeDeleteModal,
+      deleteMember,
+      editMember,
     };
   },
 });

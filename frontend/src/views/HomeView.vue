@@ -26,10 +26,6 @@ export default defineComponent({
       income: 0,
       outcome: 0,
       balance: 0,
-      dateRange: {
-        startDate: "",
-        endDate: "",
-      },
       newClass: {
         name: "",
         description: "",
@@ -62,11 +58,7 @@ export default defineComponent({
       // Placeholder for fetching data logic
     },
     fetchIncomeOutcome() {
-      // Placeholder for fetching income and outcome based on date range
-      console.log(
-        "Fetching income and outcome for date range:",
-        this.dateRange
-      );
+      console.log("Fetching income and outcome");
       this.fetchTrainerSalaries();
     },
     fetchTrainerSalaries() {
@@ -156,14 +148,6 @@ export default defineComponent({
         });
     },
   },
-  watch: {
-    dateRange: {
-      handler() {
-        this.fetchIncomeOutcome();
-      },
-      deep: true,
-    },
-  },
   mounted() {
     this.fetchData();
     this.fetchIncomeOutcome();
@@ -175,23 +159,7 @@ export default defineComponent({
 
 <template>
   <div class="home flex">
-    <div class="dashboard flex-1 p-4 mt-10">
-      <div class="mb-4">
-        <label class="block text-gray-700">Start Date</label>
-        <input
-          v-model="dateRange.startDate"
-          type="date"
-          class="w-full px-4 py-2 border rounded-md"
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">End Date</label>
-        <input
-          v-model="dateRange.endDate"
-          type="date"
-          class="w-full px-4 py-2 border rounded-md"
-        />
-      </div>
+    <div class="dashboard flex-1 p-4 mt-16">
       <div class="flex">
         <div class="card bg-white shadow-md rounded-md p-4 mb-4 flex-1">
           <h2 class="text-xl font-bold mb-2">Balance</h2>
