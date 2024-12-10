@@ -25,11 +25,17 @@
           <th class="py-2 px-4 border-b text-left">Membership Start Date</th>
           <th class="py-2 px-4 border-b text-left">Membership End Date</th>
           <th class="py-2 px-4 border-b text-left">Subscription Plan</th>
+          <th class="py-2 px-4 border-b text-left">Payment Status</th>
+          <th class="py-2 px-4 border-b text-left">Status</th>
           <th class="py-2 px-4 border-b text-left">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="member in members" :key="member.id">
+        <tr
+          v-for="member in members"
+          :key="member.id"
+          :class="{ 'line-through opacity-50': !member.isActive }"
+        >
           <td class="py-2 px-4 border-b text-left">{{ member.id }}</td>
           <td class="py-2 px-4 border-b text-left">{{ member.name }}</td>
           <td class="py-2 px-4 border-b text-left">{{ member.email }}</td>
@@ -43,6 +49,19 @@
           </td>
           <td class="py-2 px-4 border-b text-left">
             {{ member.subscriptionPlan }}
+          </td>
+          <td
+            class="py-2 px-4 border-b text-left"
+            :class="{
+              'text-green-500': member.paymentStatus === 'Up to date',
+              'text-yellow-500': member.paymentStatus === 'Pending',
+              'text-red-500': member.paymentStatus === 'Expired',
+            }"
+          >
+            {{ member.paymentStatus }}
+          </td>
+          <td class="py-2 px-4 border-b text-left">
+            {{ member.isActive ? "Active" : "Deactive" }}
           </td>
           <td class="py-2 px-4 border-b">
             <div class="flex space-x-2">
@@ -139,6 +158,29 @@
               required
             />
           </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Payment Status</label>
+            <select
+              v-model="newMember.paymentStatus"
+              class="w-full px-4 py-2 border rounded-md bg-white"
+              required
+            >
+              <option value="Em dia">Em dia</option>
+              <option value="Pendente">Pendente</option>
+              <option value="Expirado">Expirado</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Status</label>
+            <select
+              v-model="newMember.isActive"
+              class="w-full px-4 py-2 border rounded-md bg-white"
+              required
+            >
+              <option :value="true">Active</option>
+              <option :value="false">Deactive</option>
+            </select>
+          </div>
           <div class="flex justify-end">
             <button
               type="button"
@@ -230,6 +272,8 @@ export default defineComponent({
       subscriptionPlan: string;
       membershipStartDate: string;
       membershipEndDate: string;
+      paymentStatus: string;
+      isActive: boolean;
     }
     const members = ref<Member[]>([]);
     const isModalOpen = ref(false);
@@ -245,6 +289,8 @@ export default defineComponent({
       subscriptionPlan: "Monthly",
       membershipStartDate: "",
       membershipEndDate: "",
+      paymentStatus: "Pendente",
+      isActive: true,
     });
     const fetchMembers = async () => {
       try {
@@ -293,7 +339,7 @@ export default defineComponent({
         members.value
           .map(
             (member) =>
-              `${member.id},${member.name},${member.email},${member.phone},${member.address},${member.subscriptionPlan},${member.membershipStartDate},${member.membershipEndDate}`
+              `${member.id},${member.name},${member.email},${member.phone},${member.address},${member.subscriptionPlan},${member.membershipStartDate},${member.membershipEndDate},${member.paymentStatus},${member.isActive}`
           )
           .join("\n");
 

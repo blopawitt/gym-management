@@ -37,7 +37,7 @@
           <td class="py-2 px-4 border-b text-left">
             {{ new Date(trainer.joiningDate).toLocaleDateString() }}
           </td>
-          <td class="py-2 px-4 border-b">{{ trainer.salary }}</td>
+          <td class="py-2 px-4 border-b">${{ trainer.salary }}</td>
           <td class="py-2 px-4 border-b">
             <div class="flex space-x-2">
               <button

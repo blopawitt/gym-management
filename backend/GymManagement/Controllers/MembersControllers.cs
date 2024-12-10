@@ -62,6 +62,8 @@ namespace GymManagement.Controllers
             existingMember.MembershipStartDate = member.MembershipStartDate;
             existingMember.MembershipEndDate = member.MembershipEndDate;
             existingMember.Address = member.Address;
+            existingMember.IsActive = member.IsActive;
+            existingMember.PaymentStatus = member.PaymentStatus;
             _context.SaveChanges();
             return Ok(existingMember);
         }

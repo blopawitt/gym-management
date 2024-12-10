@@ -18,11 +18,13 @@ def generate_random_data():
         "address": fake.address(),
         "subscriptionPlan": fake.random_element(elements=("Monthly", "Trimestral", "Semi-annual", "Annual")),
         "membershipStartDate": fake.date_this_year().isoformat(),
-        "membershipEndDate": fake.date_this_year().isoformat()
+        "membershipEndDate": fake.date_this_year().isoformat(),
+        "paymentStatus": fake.random_element(elements=("Up to date", "Pending", "Expired")),
+        "isActive": fake.boolean()
     }
 
 # Loop to create 50 members
-for i in range(1, 1001):
+for i in range(1, 101):
     data = generate_random_data()
     try:
         response = requests.post(URL, json=data, verify=False)

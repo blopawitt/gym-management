@@ -8,6 +8,8 @@ namespace GymManagement.Models
         public required string Phone { get; set; }
         public required string Address { get; set; }
         public required string SubscriptionPlan { get; set; }
+        public required string PaymentStatus { get; set; }
+        public required bool IsActive { get; set; }
         public DateTime MembershipStartDate { get; set; }
         public DateTime MembershipEndDate { get; set; }
     }
