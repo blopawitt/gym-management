@@ -2,5 +2,6 @@ Todo:
   ☐ Search bar working for Members and Trainers and Classes
   ☐ Change view of Trainers to be table just like Members and Trainers
   ☐ Add remove button to Incomes and Expenses
+  ☐ Document and test all APIs
   ☑ Export to CSV functionality
   
