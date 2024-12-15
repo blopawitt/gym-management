@@ -1,18 +1,26 @@
 <template>
   <div class="w-full mx-auto">
-    <div class="mb-4 mt-2 ml-2">
+    <div class="mb-4 mt-2 ml-2 flex items-center space-x-2">
       <button
         @click="openModal"
-        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md"
       >
         Add Member
       </button>
       <button
         @click="openExportModal"
-        class="flex-1 bg-green-500 text-white px-4 py-2 rounded-md mb-4 ml-2"
+        class="bg-green-500 text-white px-4 py-2 rounded-md"
       >
         Export
       </button>
+      <div class="flex-1 flex justify-start">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search..."
+          class="w-1/4 px-4 py-2 border rounded-md"
+        />
+      </div>
     </div>
     <table class="min-w-full bg-white">
       <thead>
@@ -32,7 +40,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="member in members"
+          v-for="member in filteredMembers"
           :key="member.id"
           :class="{ 'line-through opacity-50': !member.isActive }"
         >
@@ -257,7 +265,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import axios from "../axios-instance"; // Import the configured Axios instance
 
 export default defineComponent({
@@ -291,6 +299,14 @@ export default defineComponent({
       membershipEndDate: "",
       paymentStatus: "Pendente",
       isActive: true,
+    });
+    const searchQuery = ref("");
+    const filteredMembers = computed(() => {
+      return members.value.filter((member) => {
+        return Object.values(member).some((value) =>
+          String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
+      });
     });
     const fetchMembers = async () => {
       try {
@@ -399,6 +415,8 @@ export default defineComponent({
       closeDeleteModal,
       deleteMember,
       editMember,
+      searchQuery,
+      filteredMembers,
     };
   },
 });
