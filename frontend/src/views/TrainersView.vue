@@ -1,34 +1,77 @@
 <template>
   <div class="w-full mx-auto">
-    <div class="mb-4 mt-2 ml-2">
+    <div class="mb-4 mt-2 ml-2 flex items-center space-x-2">
       <button
         @click="openModal"
-        class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+        class="bg-blue-500 text-white px-4 py-2 rounded-md"
       >
         Add Trainer
       </button>
       <button
         @click="openExportModal"
-        class="bg-green-500 text-white px-4 py-2 rounded-md mb-4 ml-2"
+        class="bg-green-500 text-white px-4 py-2 rounded-md"
       >
         Export
       </button>
+      <div class="flex-1 flex justify-start">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search..."
+          class="w-1/4 px-4 py-2 border rounded-md"
+        />
+      </div>
     </div>
     <table class="min-w-full bg-white">
       <thead>
         <tr>
-          <th class="py-2 px-4 border-b text-left">ID</th>
-          <th class="py-2 px-4 border-b text-left">Name</th>
-          <th class="py-2 px-4 border-b text-left">Email</th>
-          <th class="py-2 px-4 border-b text-left">Phone</th>
-          <th class="py-2 px-4 border-b text-left">Address</th>
-          <th class="py-2 px-4 border-b text-left">Joining Date</th>
-          <th class="py-2 px-4 border-b text-left">Salary</th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('id')"
+          >
+            ID
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('name')"
+          >
+            Name
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('email')"
+          >
+            Email
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('phone')"
+          >
+            Phone
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('address')"
+          >
+            Address
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('joiningDate')"
+          >
+            Joining Date
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('salary')"
+          >
+            Salary
+          </th>
           <th class="py-2 px-4 border-b text-left">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="trainer in trainers" :key="trainer.id">
+        <tr v-for="trainer in filteredTrainers" :key="trainer.id">
           <td class="py-2 px-4 border-b text-left">{{ trainer.id }}</td>
           <td class="py-2 px-4 border-b text-left">{{ trainer.name }}</td>
           <td class="py-2 px-4 border-b text-left">{{ trainer.email }}</td>
@@ -197,7 +240,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import axios from "../axios-instance"; // Import the configured Axios instance
 
 export default defineComponent({
@@ -224,6 +267,29 @@ export default defineComponent({
       address: "",
       joiningDate: "",
       salary: 0,
+    });
+    const searchQuery = ref("");
+    const sortKey = ref<string | null>(null);
+    const sortOrder = ref<string | null>(null);
+
+    const filteredTrainers = computed(() => {
+      let sortedTrainers = [...trainers.value];
+      if (sortKey.value && sortOrder.value) {
+        sortedTrainers.sort((a, b) => {
+          const aValue = a[sortKey.value as keyof Trainer];
+          const bValue = b[sortKey.value as keyof Trainer];
+          if (sortOrder.value === "asc") {
+            return aValue > bValue ? 1 : -1;
+          } else {
+            return aValue < bValue ? 1 : -1;
+          }
+        });
+      }
+      return sortedTrainers.filter((trainer) => {
+        return Object.values(trainer).some((value) =>
+          String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
+      });
     });
 
     const fetchTrainers = async () => {
@@ -321,6 +387,15 @@ export default defineComponent({
       closeExportModal();
     };
 
+    const sortTable = (key: string) => {
+      if (sortKey.value === key) {
+        sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+      } else {
+        sortKey.value = key;
+        sortOrder.value = "asc";
+      }
+    };
+
     onMounted(fetchTrainers);
 
     return {
@@ -341,6 +416,9 @@ export default defineComponent({
       openExportModal,
       closeExportModal,
       exportTrainers,
+      searchQuery,
+      filteredTrainers,
+      sortTable,
     };
   },
 });

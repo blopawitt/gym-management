@@ -25,16 +25,66 @@
     <table class="min-w-full bg-white">
       <thead>
         <tr>
-          <th class="py-2 px-4 border-b text-left">ID</th>
-          <th class="py-2 px-4 border-b text-left">Name</th>
-          <th class="py-2 px-4 border-b text-left">Email</th>
-          <th class="py-2 px-4 border-b text-left">Phone</th>
-          <th class="py-2 px-4 border-b text-left">Address</th>
-          <th class="py-2 px-4 border-b text-left">Membership Start Date</th>
-          <th class="py-2 px-4 border-b text-left">Membership End Date</th>
-          <th class="py-2 px-4 border-b text-left">Subscription Plan</th>
-          <th class="py-2 px-4 border-b text-left">Payment Status</th>
-          <th class="py-2 px-4 border-b text-left">Status</th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('id')"
+          >
+            ID
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('name')"
+          >
+            Name
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('email')"
+          >
+            Email
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('phone')"
+          >
+            Phone
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('address')"
+          >
+            Address
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('membershipStartDate')"
+          >
+            Membership Start Date
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('membershipEndDate')"
+          >
+            Membership End Date
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('subscriptionPlan')"
+          >
+            Subscription Plan
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('paymentStatus')"
+          >
+            Payment Status
+          </th>
+          <th
+            class="py-2 px-4 border-b text-left cursor-pointer"
+            @click="sortTable('isActive')"
+          >
+            Status
+          </th>
           <th class="py-2 px-4 border-b text-left">Actions</th>
         </tr>
       </thead>
@@ -301,13 +351,29 @@ export default defineComponent({
       isActive: true,
     });
     const searchQuery = ref("");
+    const sortKey = ref<string | null>(null);
+    const sortOrder = ref<string | null>(null);
+
     const filteredMembers = computed(() => {
-      return members.value.filter((member) => {
+      let sortedMembers = [...members.value];
+      if (sortKey.value && sortOrder.value) {
+        sortedMembers.sort((a, b) => {
+          const aValue = a[sortKey.value as keyof Member];
+          const bValue = b[sortKey.value as keyof Member];
+          if (sortOrder.value === "asc") {
+            return aValue > bValue ? 1 : -1;
+          } else {
+            return aValue < bValue ? 1 : -1;
+          }
+        });
+      }
+      return sortedMembers.filter((member) => {
         return Object.values(member).some((value) =>
           String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
         );
       });
     });
+
     const fetchMembers = async () => {
       try {
         const response = await axios.get("/members");
@@ -316,6 +382,7 @@ export default defineComponent({
         console.error("Error fetching members:", error);
       }
     };
+
     const addMember = async () => {
       try {
         const response = await axios.post("/members", newMember.value);
@@ -325,6 +392,7 @@ export default defineComponent({
         console.error("Error adding member:", error);
       }
     };
+
     const removeMember = async (id: number) => {
       try {
         await axios.delete(`/members/${id}`);
@@ -333,6 +401,7 @@ export default defineComponent({
         console.error("Error removing member:", error);
       }
     };
+
     const openModal = () => {
       isModalOpen.value = true;
     };
@@ -395,6 +464,15 @@ export default defineComponent({
       Object.assign(newMember.value, member);
     };
 
+    const sortTable = (key: string) => {
+      if (sortKey.value === key) {
+        sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+      } else {
+        sortKey.value = key;
+        sortOrder.value = "asc";
+      }
+    };
+
     onMounted(fetchMembers);
 
     return {
@@ -417,6 +495,7 @@ export default defineComponent({
       editMember,
       searchQuery,
       filteredMembers,
+      sortTable,
     };
   },
 });
