@@ -73,5 +73,20 @@ namespace GymManagement.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExpense(int id)
+        {
+            var expense = await _context.Expenses.FindAsync(id);
+            if (expense == null)
+            {
+                return NotFound();
+            }
+
+            _context.Expenses.Remove(expense);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

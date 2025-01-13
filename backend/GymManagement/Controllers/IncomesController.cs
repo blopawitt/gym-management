@@ -74,6 +74,21 @@ namespace GymManagement.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteIncome(int id)
+        {
+            var income = await _context.Incomes.FindAsync(id);
+            if (income == null)
+            {
+                return NotFound();
+            }
+
+            _context.Incomes.Remove(income);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpGet("total-income")]
         public async Task<ActionResult<decimal>> GetTotalIncome()
         {

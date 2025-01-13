@@ -42,20 +42,28 @@
               <span v-else>{{ income.amount }}</span>
             </td>
             <td class="py-2 px-4 border-b">
-              <button
-                v-if="income.editing"
-                @click="saveIncome(income)"
-                class="bg-blue-500 text-white w-full h-full px-2 py-1"
-              >
-                Save
-              </button>
-              <button
-                v-else
-                @click="income.editing = true"
-                class="bg-yellow-500 text-white w-full h-full px-2 py-1"
-              >
-                Edit
-              </button>
+              <div class="flex space-x-2">
+                <button
+                  v-if="income.editing"
+                  @click="saveIncome(income)"
+                  class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md"
+                >
+                  Save
+                </button>
+                <button
+                  v-else
+                  @click="income.editing = true"
+                  class="flex-1 bg-yellow-500 text-white px-4 py-2 rounded-md"
+                >
+                  Edit
+                </button>
+                <button
+                  @click="removeIncome(income.id)"
+                  class="flex-1 bg-red-500 text-white px-4 py-2 rounded-md"
+                >
+                  Remove
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -103,20 +111,28 @@
               <span v-else>{{ expense.amount }}</span>
             </td>
             <td class="py-2 px-4 border-b">
-              <button
-                v-if="expense.editing"
-                @click="saveExpense(expense)"
-                class="bg-blue-500 text-white w-full h-full px-2 py-1"
-              >
-                Save
-              </button>
-              <button
-                v-else
-                @click="expense.editing = true"
-                class="bg-yellow-500 text-white w-full h-full px-2 py-1"
-              >
-                Edit
-              </button>
+              <div class="flex space-x-2">
+                <button
+                  v-if="expense.editing"
+                  @click="saveExpense(expense)"
+                  class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-md"
+                >
+                  Save
+                </button>
+                <button
+                  v-else
+                  @click="expense.editing = true"
+                  class="flex-1 bg-yellow-500 text-white px-4 py-2 rounded-md"
+                >
+                  Edit
+                </button>
+                <button
+                  @click="removeExpense(expense.id)"
+                  class="flex-1 bg-red-500 text-white px-4 py-2 rounded-md"
+                >
+                  Remove
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -177,6 +193,22 @@ export default {
         expense.editing = false;
       } catch (error) {
         console.error("Error saving expense:", error);
+      }
+    },
+    async removeIncome(id) {
+      try {
+        await axios.delete(`/api/incomes/${id}`);
+        this.incomes = this.incomes.filter((income) => income.id !== id);
+      } catch (error) {
+        console.error("Error removing income:", error);
+      }
+    },
+    async removeExpense(id) {
+      try {
+        await axios.delete(`/api/expenses/${id}`);
+        this.expenses = this.expenses.filter((expense) => expense.id !== id);
+      } catch (error) {
+        console.error("Error removing expense:", error);
       }
     },
     formatDate(dateString) {
